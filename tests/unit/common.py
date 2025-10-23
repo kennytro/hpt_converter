@@ -1,5 +1,5 @@
-from lib.csv.utils import CsvType
-from lib.schema.csv.v2.standard_charge import get_standard_charge_base_fields
+from hpt_converter.lib.csv.utils import CsvType
+from hpt_converter.lib.schema.csv.v2.standard_charge import get_standard_charge_base_fields
 from pydantic import create_model
 from decimal import Decimal
 

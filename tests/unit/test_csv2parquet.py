@@ -1,6 +1,6 @@
-from lib.csv.utils import CsvType
+from hpt_converter.lib.csv.utils import CsvType
 
-from csv2parquet import Csv2Parquet, FileMetaData
+from hpt_converter.csv2parquet import Csv2Parquet, FileMetaData
 from pathlib import Path
 from tests.unit.common import create_standard_charge_instance
 import pandas as pd
