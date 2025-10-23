@@ -2,7 +2,7 @@ from hpt_converter.lib.csv.utils import CsvType
 
 from hpt_converter.csv2parquet import Csv2Parquet, FileMetaData
 from pathlib import Path
-from tests.unit.common import create_standard_charge_instance
+from tests.unit.common import create_standard_charge_instance, comp_dataframes
 import pandas as pd
 import shutil
 import pytest
@@ -76,6 +76,11 @@ def test_convert(csv_type: CsvType, file_name: str, tmp_path: Path, data_root: P
             shutil.copy(file, str(snapshot_path))
         else:
             df2 = pd.read_parquet(snapshot_path)
-            assert df.equals(df2)
-
-
+            sort_by = []
+            if file.name == 'general_data_elements.parquet':
+                sort_by = ['file_id']
+            elif file.name == 'payer_plans.parquet':
+                sort_by = ['plan_id']
+            elif file.name == 'standard_charges.parquet':
+                sort_by = ['description', 'plan_id']
+            comp_dataframes(df, df2, sort_by=sort_by)

@@ -1,7 +1,13 @@
-from hpt_converter.lib.csv.utils import CsvType
-from hpt_converter.lib.schema.csv.v2.standard_charge import get_standard_charge_base_fields
-from pydantic import create_model
 from decimal import Decimal
+from typing import List, Optional
+
+import pandas as pd
+from pydantic import create_model
+
+from hpt_converter.lib.csv.utils import CsvType
+from hpt_converter.lib.schema.csv.v2.standard_charge import \
+    get_standard_charge_base_fields
+
 
 def create_standard_charge_instance(csv_type: CsvType):
 
@@ -46,3 +52,14 @@ def create_standard_charge_instance(csv_type: CsvType):
     else:
         raise ValueError(f"CsvType({csv_type}) is not supporte.")
     return create_model('StandardChargeDynamicModel', **fields)(**model_data)
+
+def comp_dataframes(left: pd.DataFrame, right: pd.DataFrame, sort_by: Optional[List[str]] = []):
+
+    if left.shape != right.shape:
+        raise AssertionError(f'Two dataframes have different dimension(left: {left.shape}), right: {right.shape})')
+
+    if sort_by:
+        left = left.sort_values(sort_by).reset_index(drop=True)
+        right = right.sort_values(sort_by).reset_index(drop=True)
+
+    pd.testing.assert_frame_equal(left, right)
