@@ -20,5 +20,5 @@ Issues = "https://github.com/kennytro/hpt_converter/issues"
 
 
 [build-system]
-requires = ["pydantic >= 2.12", "pandas >= 2.3", "pyarrod >=21"]
+requires = ["pydantic >= 2.12", "pandas >= 2.3", "pyarrow >=21"]
 build-backend = "hatchling.build"
