@@ -1,6 +1,6 @@
 import csv
 from decimal import Decimal
-from typing import Dict, List, Optional, get_type_hints, Type
+from typing import Dict, List, Optional
 
 from pydantic import BaseModel, Field, create_model, field_validator
 
@@ -62,8 +62,6 @@ def create_standard_charge_model(csv_file_path: str) -> BaseModel:
                 validators[f'{field}_validator'] = field_validator(field, mode='before')(lambda cls, v: v if v != '' else None)
         
         return validators
-    # def default_decimal(cls, v):
-    #     return v if v != '' else None
 
     standard_charge_header = []
     with open(csv_file_path, mode='r', newline='', encoding='utf-8') as csv_file:
@@ -87,6 +85,4 @@ def create_standard_charge_model(csv_file_path: str) -> BaseModel:
             fields[field_name] = (str, None)
     
     return create_model('StandardChargeDynamicModel', **fields,
-                        __validators__=_create_validator(fields)
-                        # __validators__={'standard_charge|gross_validator': field_validator('standard_charge|gross', mode='before')(default_decimal)}
-    )
+                        __validators__=_create_validator(fields))

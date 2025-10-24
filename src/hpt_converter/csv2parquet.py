@@ -55,7 +55,7 @@ class Csv2Parquet:
 
         # wide format may have multiple payer plans per row. We identify them by the presence of "standard_charge|...|negotiated_dollar" fields.
         payer_plans = {}
-        for field_name in raw_standard_charge.model_fields:
+        for field_name in raw_standard_charge.__class__.model_fields:
             if field_name.startswith('standard_charge|') and field_name.endswith('|negotiated_dollar'):
                 tokens = field_name.split('|')
                 assert len(tokens) == 4, f"Unexpected field name format: {field_name}"

@@ -2,7 +2,7 @@ from decimal import Decimal
 from enum import StrEnum
 from typing import List, Optional
 
-from pydantic import BaseModel, Field, field_validator
+from pydantic import BaseModel, Field, field_validator, ConfigDict
 
 
 class DrugTypeOfMeasument(StrEnum):
@@ -63,19 +63,25 @@ class StandardCharge(BaseModel):
     setting: Setting = Field(..., description="Indicates whether the item or service is provided in connection with an inpatient admission or an outpatient department visit. ")
     drug_unit_of_measurement: Optional[str] = Field(default=None, description="If the item or service is a drug, indicate the unit value that corresponds to the established standard charge..")
     drug_type_of_measurement: Optional[DrugTypeOfMeasument] = Field(default=None, description="The measurement type that corresponds to the established standard charge for drugs as defined by either the National Drug Code or the National Council for Prescription Drug Programs. ")
-    gross_charge: Decimal = Field(default=0.00, description="Gross charge is the charge for an individual item or service that is reflected on a hospital’s chargemaster, absent any discounts.")
-    discounted_cash: Decimal = Field(default=0.00, description="The discounted cash price for the item or service.")
+    gross_charge: Optional[Decimal] = Field(default=None, alias='standard_charge|gross',
+                                  description="Gross charge is the charge for an individual item or service that is reflected on a hospital’s chargemaster, absent any discounts.")
+    discounted_cash: Optional[Decimal] = Field(default=None, alias='standard_charge|discounted_cash', 
+                                               description="The discounted cash price for the item or service.")
     plan_id: str = Field(default=None, description="The unique identifier for the payer’s specific plan associated with the negotiated charge.")
     modifiers: Optional[str] = Field(default=None, description="Include any modifier(s) that may change the standard charge that corresponds to hospital items or services.")
     negotiated_dollar: Optional[Decimal] = Field(default=None, description="Payer-specific negotiated charge (expressed as a dollar amount) that a hospital has negotiated with a third-party payer for the corresponding item or service.")
     negotiated_percentage: Optional[Decimal] = Field(default=None, description="Payer-specific negotiated charge (expressed as a percentage) that a hospital has negotiated with a third-party payer for an item or service.")
     negotiated_algorithm: Optional[str] = Field(default=None, description="Payer-specific negotiated charge (expressed as an algorithm) that a hospital has negotiated with a third-party payer for the corresponding item or service.")
     estimated_amount: Optional[Decimal] = Field(default=None, description="Estimated allowed amount means the average dollar amount that the hospital has historically received from a third party payer for an item or service. If the standard charge is based on a percentage or algorithm, the MRF must also specify the estimated allowed amount for that item or service.")
-    min_charge: Optional[Decimal] = Field(default=None, description="De-identified minimum negotiated charge is the lowest charge that a hospital has negotiated with all third-party payers for an item or service. This is determined from the set of negotiated standard charge dollar amounts.")
-    max_charge: Optional[Decimal] = Field(default=None, description="De-identified maximum negotiated charge is the lowest charge that a hospital has negotiated with all third-party payers for an item or service. This is determined from the set of negotiated standard charge dollar amounts.")
+    min_charge: Optional[Decimal] = Field(default=None, alias='standard_charge|min', 
+                                          description="De-identified minimum negotiated charge is the lowest charge that a hospital has negotiated with all third-party payers for an item or service. This is determined from the set of negotiated standard charge dollar amounts.")
+    max_charge: Optional[Decimal] = Field(default=None, alias='standard_charge|max',
+                                          description="De-identified maximum negotiated charge is the lowest charge that a hospital has negotiated with all third-party payers for an item or service. This is determined from the set of negotiated standard charge dollar amounts.")
     methodology: Optional[StandardChargeMethod] = Field(default=None, description="Method used to establish the payer-specific negotiated charge. The valid value corresponds to the contract arrangement.")
     additional_generic_notes: Optional[str] = Field(default=None, description="A free text data element that is used to help explain any of the data including, for example, blanks due to no applicable data, charity care policies, or other contextual information that aids in the public’s understanding of the standard charges.")   
     additional_payer_notes: Optional[str] = Field(default=None, description="A free text data element used to help explain data in the file that is related to a payer-specific negotiated charge.")    
+
+    model_config = ConfigDict(populate_by_name=True)    # Allow population by the original field name as well
 
     @field_validator('drug_type_of_measurement', mode='before')
     @classmethod

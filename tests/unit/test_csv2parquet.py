@@ -1,12 +1,13 @@
-from hpt_converter.lib.csv.utils import CsvType
+import shutil
+from dataclasses import asdict
+from pathlib import Path
+
+import pandas as pd
+import pytest
 
 from hpt_converter.csv2parquet import Csv2Parquet, FileMetaData
-from pathlib import Path
-from tests.unit.common import create_standard_charge_instance, comp_dataframes
-import pandas as pd
-import shutil
-import pytest
-from dataclasses import asdict
+from hpt_converter.lib.csv.utils import CsvType
+from .common import comp_dataframes, create_standard_charge_instance
 
 
 def test_split_raw_standard_charge_tall():
@@ -67,9 +68,10 @@ def test_convert(csv_type: CsvType, file_name: str, tmp_path: Path, data_root: P
 
     snapshot_dir = Path(__file__).parent.joinpath('snapshots', 'csv2parquet', csv_type.value)
     for file in tmp_path.iterdir():
-        print(f'checking the data in {file.name}')
+        print(f'##### checking the data in {file.name} #####')
         df = pd.read_parquet(file)
-        print(df.head(n=10))
+        with pd.option_context('display.max_columns', None, 'display.width', 400):
+            print(df.head(n=10))
         snapshot_path = snapshot_dir.joinpath(file.name)
         if not snapshot_path.exists():
             print(f"snapshot {str(snapshot_path)} doesn't exist. Creating a new one")
