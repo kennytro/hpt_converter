@@ -1,0 +1,24 @@
+[project]
+name = "hpt-converter"
+version = "0.0.1"
+authors = [
+  { name="Kenny T. Ro", email="k3nnyro@yahoo.com" }
+]
+description = "Converts CMS HPT(Hospital Price Transparency) file to a schema that is easier to consume."
+readme = "README.md"
+requires-python = ">=3.12"
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "Operating System :: OS Independent",
+]
+license = "MIT"
+license-files = ["LICEN[CS]E*"] 
+
+[project.urls]
+Homepage = "https://github.com/kennytro/hpt_converter"
+Issues = "https://github.com/kennytro/hpt_converter/issues"
+
+
+[build-system]
+requires = ["pydantic >= 2.12", "pandas >= 2.3", "pyarrod >=21"]
+build-backend = "hatchling.build"
