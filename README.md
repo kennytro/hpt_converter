@@ -23,4 +23,4 @@ print(result)       # result is the metadata of conversion.
 For JSON format, use `Json2Parquet` module.
 
 ## Output Schema
-Refer to the [README](./src/hpt_converter/lib/schema/abtract/v1/README.md) in the schema folder.
+Refer to the [README](./src/hpt_converter/lib/schema/abstract/v1/README.md) in the schema folder.
