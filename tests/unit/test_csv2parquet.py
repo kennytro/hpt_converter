@@ -7,6 +7,7 @@ import pytest
 
 from hpt_converter.csv2parquet import Csv2Parquet, FileMetaData
 from hpt_converter.lib.csv.utils import CsvType
+
 from .common import comp_dataframes, create_standard_charge_instance
 
 
@@ -46,6 +47,7 @@ def test_split_raw_standard_charge_wide():
 
 
 @pytest.mark.parametrize("csv_type,file_name", [(CsvType.TALL, "tall_v2.csv"),
+                                                (CsvType.TALL, 'jm_10000.csv'), # from John Muir web site.
                                                 (CsvType.WIDE, "wide_v2.csv")])
 def test_convert(csv_type: CsvType, file_name: str, tmp_path: Path, data_root: Path):
     # Arrange
@@ -60,13 +62,16 @@ def test_convert(csv_type: CsvType, file_name: str, tmp_path: Path, data_root: P
 
     # Assert
     print(f"metadata: {asdict(result)}")
-    if csv_type == CsvType.TALL:
+    if file_name == "tall_v2.csv":
         assert result == FileMetaData(input_row_count=31, standard_charge_count=31, plan_count=2)
-    elif csv_type == CsvType.WIDE:
+    elif file_name == "jm_10000.csv":
+        assert result == FileMetaData(input_row_count=9997, standard_charge_count=9997, plan_count=140)
+    elif file_name == "wide_v2.csv":
         assert result == FileMetaData(input_row_count=20, standard_charge_count=40, plan_count=2)
 
 
-    snapshot_dir = Path(__file__).parent.joinpath('snapshots', 'csv2parquet', csv_type.value)
+    snapshot_dir = Path(__file__).parent.joinpath('snapshots', 'csv2parquet', file_name.split('.')[0])
+    snapshot_dir.mkdir(parents=True, exist_ok=True)
     for file in tmp_path.iterdir():
         print(f'##### checking the data in {file.name} #####')
         df = pd.read_parquet(file)

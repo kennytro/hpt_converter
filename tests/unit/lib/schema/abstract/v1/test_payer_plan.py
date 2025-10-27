@@ -1,4 +1,4 @@
-from hpt_converter.lib.schema.abtract.v1.payer_plan import PayerPlan
+from hpt_converter.lib.schema.abstract.v1 import PayerPlan
 from uuid import uuid4
 
 

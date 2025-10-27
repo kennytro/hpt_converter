@@ -1,4 +1,4 @@
-from hpt_converter.lib.schema.abtract.v1.standard_charge import StandardCharge
+from hpt_converter.lib.schema.abstract.v1 import StandardCharge
 from uuid import uuid4
 from pydantic import ValidationError
 import pytest

@@ -5,6 +5,9 @@ Data in HPT file is split into 3 files:
 * Payer plan
 * Standard charge
 
+[NOTE]: Auto generate document. Do NOT manually edit this file.
+
+
 # GeneralDataElements
 
 |Name|Type|Description|

@@ -3,7 +3,8 @@ from pathlib import Path
 import pytest
 
 import hpt_converter.lib.csv.utils as utils
-from hpt_converter.lib.schema.csv.v2.standard_charge import create_standard_charge_model
+from hpt_converter.lib.schema.csv.v2.standard_charge import \
+    create_standard_charge_model
 
 
 def test_normalize_header():
