@@ -10,11 +10,11 @@ import pyarrow as pa
 import pyarrow.dataset as ds
 import pyarrow.parquet as pq
 
-from lib.csv.utils import infer_csv_type, read_general_data_elements
-from lib.schema.abtract.v1.payer_plan import PayerPlan
-from lib.schema.abtract.v1.standard_charge import StandardCharge
-from lib.schema.csv import CsvType
-from lib.schema.csv.v2.standard_charge import create_standard_charge_model
+from hpt_converter.lib.csv.utils import infer_csv_type, read_general_data_elements
+from hpt_converter.lib.schema.abtract.v1.payer_plan import PayerPlan
+from hpt_converter.lib.schema.abtract.v1.standard_charge import StandardCharge
+from hpt_converter.lib.schema.csv import CsvType
+from hpt_converter.lib.schema.csv.v2.standard_charge import create_standard_charge_model
 
 
 @dataclass
@@ -55,7 +55,7 @@ class Csv2Parquet:
 
         # wide format may have multiple payer plans per row. We identify them by the presence of "standard_charge|...|negotiated_dollar" fields.
         payer_plans = {}
-        for field_name in raw_standard_charge.model_fields:
+        for field_name in raw_standard_charge.__class__.model_fields:
             if field_name.startswith('standard_charge|') and field_name.endswith('|negotiated_dollar'):
                 tokens = field_name.split('|')
                 assert len(tokens) == 4, f"Unexpected field name format: {field_name}"
