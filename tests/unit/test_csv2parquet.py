@@ -7,6 +7,7 @@ import pytest
 
 from hpt_converter.csv2parquet import Csv2Parquet, FileMetaData
 from hpt_converter.lib.csv.utils import CsvType
+
 from .common import comp_dataframes, create_standard_charge_instance
 
 

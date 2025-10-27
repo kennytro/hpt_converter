@@ -11,8 +11,7 @@ import pyarrow.dataset as ds
 import pyarrow.parquet as pq
 
 from hpt_converter.lib.csv.utils import infer_csv_type, read_general_data_elements
-from hpt_converter.lib.schema.abtract.v1.payer_plan import PayerPlan
-from hpt_converter.lib.schema.abtract.v1.standard_charge import StandardCharge
+from hpt_converter.lib.schema.abstract.v1 import *
 from hpt_converter.lib.schema.csv import CsvType
 from hpt_converter.lib.schema.csv.v2.standard_charge import create_standard_charge_model
 

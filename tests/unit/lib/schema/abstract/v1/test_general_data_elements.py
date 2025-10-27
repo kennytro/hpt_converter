@@ -3,7 +3,7 @@ from uuid import uuid4
 
 import pytest
 
-from hpt_converter.lib.schema.abtract.v1.general_data_elements import GeneralDataElements
+from hpt_converter.lib.schema.abstract.v1 import GeneralDataElements
 
 
 def _get_general_data_elements() -> dict:

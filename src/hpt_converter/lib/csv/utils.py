@@ -2,7 +2,7 @@ import csv
 
 from typing import Optional, Set
 
-from hpt_converter.lib.schema.abtract.v1.general_data_elements import GeneralDataElements
+from hpt_converter.lib.schema.abstract.v1.general_data_elements import GeneralDataElements
 from hpt_converter.lib.schema.csv import CsvType
 
 
