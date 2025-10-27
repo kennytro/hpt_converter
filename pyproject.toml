@@ -18,6 +18,11 @@ license-files = ["LICEN[CS]E*"]
 Homepage = "https://github.com/kennytro/hpt_converter"
 Issues = "https://github.com/kennytro/hpt_converter/issues"
 
+[tool.hatch.build]
+exclude = [
+    "/tests",
+    "/src/tools/"
+]
 
 [build-system]
 requires = ["hatchling", "pydantic >= 2.12", "pandas >= 2.3", "pyarrow >=21"]
