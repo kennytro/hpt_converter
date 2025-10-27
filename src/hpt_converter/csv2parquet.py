@@ -1,19 +1,21 @@
 import csv
-import json
 import os
+import argparse
 import tempfile
-from dataclasses import dataclass
+from dataclasses import dataclass, asdict
 from logging import getLogger
 from typing import List, Tuple
-
+import sys
 import pyarrow as pa
 import pyarrow.dataset as ds
 import pyarrow.parquet as pq
 
-from hpt_converter.lib.csv.utils import infer_csv_type, read_general_data_elements
+from hpt_converter.lib.csv.utils import (infer_csv_type,
+                                         read_general_data_elements)
 from hpt_converter.lib.schema.abstract.v1 import *
 from hpt_converter.lib.schema.csv import CsvType
-from hpt_converter.lib.schema.csv.v2.standard_charge import create_standard_charge_model
+from hpt_converter.lib.schema.csv.v2.standard_charge import \
+    create_standard_charge_model
 
 
 @dataclass
@@ -25,7 +27,7 @@ class FileMetaData:
 
 class Csv2Parquet:
     def __init__(self, csv_file_path, out_dir_path,
-                 csv_type: CsvType):
+                 csv_type: CsvType = None):
         self.csv_file_path = csv_file_path
         self.out_dir_path = out_dir_path
         self.csv_type = csv_type or infer_csv_type(csv_file_path)
@@ -155,3 +157,30 @@ class Csv2Parquet:
         self.logger.info(f"Conversion completed. Output written to {self.out_dir_path}")
         self.logger.info(f"File MetaData: {self.meta_data}")
         return self.meta_data
+
+
+if __name__ == "__main__":
+    parser = argparse.ArgumentParser(description="Convert HPT CSV to abstract schema in Parquet.")
+
+    parser.add_argument("input", type=str, help="Path to input CSV file.")
+    parser.add_argument("--output-folder", type=str, help="Path to output folder. Default is the folder where the input file is.")
+    parser.add_argument("--csv-type", choices=[m.value for m in CsvType], help="Type of input CSV file(\"wide\" or \"tall\")")
+    parser.add_argument("--infer-type", action='store_true', help="Infer input CSV file type without conversion.")
+    args = parser.parse_args()
+
+    if args.infer_type:
+        csv_type = infer_csv_type(args.input)
+        print(f"File({args.input}) type: {csv_type.value}")
+        sys.exit(0)
+    if not args.output_folder:
+        args.output_folder = os.path.dirname(args.input)
+        print(f"Set 'output-folder' to {args.output_folder}")
+    try:
+        result = Csv2Parquet(csv_file_path=args.input,
+                             out_dir_path=args.output_folder,
+                             csv_type=CsvType(args.csv_type) if args.csv_type else None).convert()
+        print(f"Result: {asdict(result)}")
+        sys.exit(0)
+    except Exception as e:
+        print(f"Failed: {str(e)}")
+        sys.exit(-1)
