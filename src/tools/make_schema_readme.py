@@ -8,13 +8,13 @@ from pydantic import Field
 from hpt_converter.lib.schema.abstract.v1 import *
 
 TEMPLATE = """
-# Abstract Schema
+# Abstract Schema[^1]
 Data in HPT file is split into 3 files:
 * General data element
 * Payer plan
 * Standard charge
 
-[NOTE]: Auto generate document. Do NOT manually edit this file.
+[^1]: Auto generated document. DO NOT manually edit this file.
 
 """
 
