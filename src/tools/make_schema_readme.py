@@ -54,7 +54,7 @@ if __name__ == "__main__":
     with open(file_path, mode='w') as file:
         file.write(TEMPLATE)
         for model in [GeneralDataElements, PayerPlan, StandardCharge]:
-            file.write(f'\n# {model.__name__}\n\n')
+            file.write(f'\n## {model.__name__}\n\n')
             file.write("|Name|Type|Description|\n")
             file.write("|---|:---:|---|\n")
             for field_name, field_info in model.model_fields.items():

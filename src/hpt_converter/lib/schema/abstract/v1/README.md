@@ -8,7 +8,7 @@ Data in HPT file is split into 3 files:
 [^1]: Auto generated document. DO NOT manually edit this file.
 
 
-# GeneralDataElements
+## GeneralDataElements
 
 |Name|Type|Description|
 |---|:---:|---|
@@ -23,7 +23,7 @@ Data in HPT file is split into 3 files:
 |financial_aid_policy|String|The hospital’s financial aid policy.|
 |general_contract_provisions|String|Payer contract provisions that are negotiated at an aggregate level across items and services (e.g., claim level).|
 
-# PayerPlan
+## PayerPlan
 
 |Name|Type|Description|
 |---|:---:|---|
@@ -32,7 +32,7 @@ Data in HPT file is split into 3 files:
 |payer_name|String|The name of the payer associated with the negotiated charge for the item or service.|
 |plan_name|String|The name of the payer’s specific plan associated with the standard charge.|
 
-# StandardCharge
+## StandardCharge
 
 |Name|Type|Description|
 |---|:---:|---|
