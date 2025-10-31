@@ -1,6 +1,6 @@
 import csv
 
-from typing import Optional, Set
+from typing import Set, Any
 
 from hpt_converter.lib.schema.abstract.v1.general_data_elements import GeneralDataElements
 from hpt_converter.lib.schema.csv import CsvType
@@ -38,7 +38,7 @@ def get_csv_type(header: set[str]) -> CsvType:
 
 
 
-def infer_csv_type(csv_file_path) -> Optional[CsvType]:
+def infer_csv_type(csv_file_path) -> CsvType:
     """Infers the type of CSV file (tall or wide) based on its header line.
 
     Args:
@@ -57,7 +57,7 @@ def infer_csv_type(csv_file_path) -> Optional[CsvType]:
     if not standard_charge_header:
         raise ValueError(f"CSV file({csv_file_path}) is missing standard charge header line.")
 
-    return get_csv_type(standard_charge_header)
+    return get_csv_type(set(standard_charge_header))
 
         
 def read_general_data_elements(csv_file_path) -> GeneralDataElements:
@@ -71,7 +71,7 @@ def read_general_data_elements(csv_file_path) -> GeneralDataElements:
         csv_reader = csv.reader(csv_file)
         header = [x for x in next(csv_reader, []) if x != '']
         elements = [x for x in next(csv_reader, []) if x != '']
-        dict_elements = dict(zip(header, elements))
+        dict_elements: dict[str, Any] = dict(zip(header, elements))
 
         for key in list(dict_elements.keys()):
             # rename affimation_statement key.

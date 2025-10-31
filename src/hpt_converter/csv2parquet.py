@@ -1,11 +1,12 @@
+import argparse
 import csv
 import os
-import argparse
-import tempfile
-from dataclasses import dataclass, asdict
-from logging import getLogger
-from typing import List, Tuple
 import sys
+import tempfile
+from dataclasses import asdict, dataclass
+from logging import getLogger
+from typing import List, Optional, Tuple
+
 import pyarrow as pa
 import pyarrow.dataset as ds
 import pyarrow.parquet as pq
@@ -27,7 +28,7 @@ class FileMetaData:
 
 class Csv2Parquet:
     def __init__(self, csv_file_path, out_dir_path,
-                 csv_type: CsvType = None):
+                 csv_type: Optional[CsvType] = None):
         self.csv_file_path = csv_file_path
         self.out_dir_path = out_dir_path
         self.csv_type = csv_type or infer_csv_type(csv_file_path)
@@ -35,7 +36,7 @@ class Csv2Parquet:
         self.logger = getLogger(__name__)
 
     @staticmethod
-    def split_raw_standard_charge(raw_standard_charge, csv_type: CsvType, file_id: str) -> List[Tuple[StandardCharge, PayerPlan]]:
+    def split_raw_standard_charge(raw_standard_charge, csv_type: Optional[CsvType], file_id: str) -> List[Tuple[StandardCharge, PayerPlan]]:
         """Splits raw standard charge instance into abstract standard charge instances and payer plan instances.
         The CSV type determines the outcome dimition - Tall type produces a single pair while wide type produces multiple pairs.
 
@@ -67,9 +68,9 @@ class Csv2Parquet:
 
         return_list = []
         standard_charge_template = (StandardCharge(file_id=file_id, **raw_standard_charge.model_dump())
-                                    .model_dump(exclude=['plan_id', 'negotiated_dollar', 'negotiated_percentage',
+                                    .model_dump(exclude={'plan_id', 'negotiated_dollar', 'negotiated_percentage',
                                                          'negotiated_algorithm', 'estimated_amount', 'methodology',
-                                                         'additional_payer_notes']))
+                                                         'additional_payer_notes'}))
         for payer_plan_key, payer_plan in payer_plans.items():
             standard_charge = StandardCharge(
                 plan_id=payer_plan.plan_id,
