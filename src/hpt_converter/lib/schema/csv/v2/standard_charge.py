@@ -46,7 +46,7 @@ def get_standard_charge_base_fields(csv_type: CsvType) -> dict:
 
 
 
-def create_standard_charge_model(csv_file_path: str) -> BaseModel:
+def create_standard_charge_model(csv_file_path: str) -> type[BaseModel]:
     """Creates and returns the appropriate StandardCharge model class based on the CSV type.
 
     Args:
@@ -72,7 +72,7 @@ def create_standard_charge_model(csv_file_path: str) -> BaseModel:
     if not standard_charge_header:
         raise ValueError(f"CSV file({csv_file_path}) is missing standard chage header line.")
 
-    standard_charge_header = normalize_header(standard_charge_header)
+    standard_charge_header = normalize_header(set(standard_charge_header))
     csv_type = get_csv_type(standard_charge_header)
     fields = get_standard_charge_base_fields(csv_type)
     # dynamically add placeholder fields.
