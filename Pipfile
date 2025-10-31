@@ -9,8 +9,8 @@ pandas = "*"
 pyarrow = "*"
 
 [dev-packages]
-datamodel-code-generator = "*"
 pytest = "*"
+datamodel-code-generator = {extras = ["http"], version = "*"}
 
 [requires]
 python_version = "3.12"
