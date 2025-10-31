@@ -1,9 +1,7 @@
 import argparse
 import sys
 from pathlib import Path
-from typing import get_args, get_origin
-
-from pydantic import Field
+from typing import Any, get_args, get_origin
 
 from hpt_converter.lib.schema.abstract.v1 import *
 
@@ -19,11 +17,10 @@ Data in HPT file is split into 3 files:
 """
 
 
-def get_type_name(field_name: str, field: Field) -> str:
+def get_type_name(field_name: str, annotation: Any) -> str:
     type_map = {'str': 'String',
                 'bool': 'Boolean'}
     # TODO: emit Enum type as a hyperlink to its definition. 
-    annotation = field.annotation
     if annotation.__name__ in type_map:
         return type_map[annotation.__name__]
     if annotation.__name__ == 'Optional':
@@ -33,7 +30,7 @@ def get_type_name(field_name: str, field: Field) -> str:
         return f"List[{get_args(annotation)[0].__name__}]"
     if get_origin(annotation) == tuple:
         args = get_args(annotation)
-        return f"Tuple[{', '.join([type_map.get(x.__name__, x.__name__) for x in args])}]"
+        return f"Tuple[{', '.join([type_map.get(x.__name__) or  x.__name__ for x in args])}]"
     # [NOTE] uncomment the line below after supporting enum type.
     # raise AssertionError(f"Unsupported type({annotation}) of field({field_name})")
     return annotation.__name__
@@ -58,7 +55,7 @@ if __name__ == "__main__":
             file.write("|Name|Type|Description|\n")
             file.write("|---|:---:|---|\n")
             for field_name, field_info in model.model_fields.items():
-                file.write(f"|{field_name}|{get_type_name(field_name, field_info)}|{field_info.description}|\n")
+                file.write(f"|{field_name}|{get_type_name(field_name, field_info.annotation)}|{field_info.description}|\n")
         # [TODO] add a section for enum definitions.
     print("Done")
     sys.exit(0)
