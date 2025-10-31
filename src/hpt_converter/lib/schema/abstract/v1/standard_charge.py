@@ -2,7 +2,7 @@ from decimal import Decimal
 from enum import StrEnum
 from typing import List, Optional
 
-from pydantic import BaseModel, Field, field_validator, ConfigDict
+from pydantic import BaseModel, ConfigDict, Field, field_validator
 
 
 class DrugTypeOfMeasument(StrEnum):
@@ -67,7 +67,7 @@ class StandardCharge(BaseModel):
                                   description="Gross charge is the charge for an individual item or service that is reflected on a hospital’s chargemaster, absent any discounts.")
     discounted_cash: Optional[Decimal] = Field(default=None, alias='standard_charge|discounted_cash', 
                                                description="The discounted cash price for the item or service.")
-    plan_id: str = Field(default=None, description="The unique identifier for the payer’s specific plan associated with the negotiated charge.")
+    plan_id: Optional[str] = Field(default=None, description="The unique identifier for the payer’s specific plan associated with the negotiated charge.")
     modifiers: Optional[str] = Field(default=None, description="Include any modifier(s) that may change the standard charge that corresponds to hospital items or services.")
     negotiated_dollar: Optional[Decimal] = Field(default=None, description="Payer-specific negotiated charge (expressed as a dollar amount) that a hospital has negotiated with a third-party payer for the corresponding item or service.")
     negotiated_percentage: Optional[Decimal] = Field(default=None, description="Payer-specific negotiated charge (expressed as a percentage) that a hospital has negotiated with a third-party payer for an item or service.")
@@ -86,4 +86,4 @@ class StandardCharge(BaseModel):
     @field_validator('drug_type_of_measurement', mode='before')
     @classmethod
     def validate_drug_type_of_measurement(cls, value: str) -> Optional[DrugTypeOfMeasument]:
-        return value.lower() if (value and value != '') else None
+        return DrugTypeOfMeasument(value.lower()) if (value and value != '') else None
