@@ -1,8 +1,8 @@
 import csv
+from typing import Any, Optional, Set
 
-from typing import Set, Any
-
-from hpt_converter.lib.schema.abstract.v1.general_data_elements import GeneralDataElements
+from hpt_converter.lib.schema.abstract.v1.general_data_elements import \
+    GeneralDataElements
 from hpt_converter.lib.schema.csv import CsvType
 
 
@@ -60,7 +60,7 @@ def infer_csv_type(csv_file_path) -> CsvType:
     return get_csv_type(set(standard_charge_header))
 
         
-def read_general_data_elements(csv_file_path) -> GeneralDataElements:
+def read_general_data_elements(csv_file_path, user_file_id: Optional[str] = None) -> GeneralDataElements:
     """Reads a CSV file and returns a GeneralDataElements instance.    
     Args:
         csv_file_path (str): Path to the CSV file.
@@ -84,4 +84,6 @@ def read_general_data_elements(csv_file_path) -> GeneralDataElements:
                 dict_elements['license_number'] = (dict_elements[key], state)
                 del dict_elements[key]
 
+        if user_file_id:
+            dict_elements['file_id'] = user_file_id
         return GeneralDataElements(**dict_elements)

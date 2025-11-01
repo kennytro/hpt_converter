@@ -28,10 +28,12 @@ class FileMetaData:
 
 class Csv2Parquet:
     def __init__(self, csv_file_path, out_dir_path,
-                 csv_type: Optional[CsvType] = None):
+                 csv_type: Optional[CsvType] = None,
+                 user_file_id: Optional[str] = None):
         self.csv_file_path = csv_file_path
         self.out_dir_path = out_dir_path
         self.csv_type = csv_type or infer_csv_type(csv_file_path)
+        self.user_file_id = user_file_id
         self.meta_data: FileMetaData = FileMetaData()
         self.logger = getLogger(__name__)
 
@@ -87,7 +89,8 @@ class Csv2Parquet:
 
     def convert(self) -> FileMetaData:
 
-        general_data_elements = read_general_data_elements(self.csv_file_path)
+        general_data_elements = read_general_data_elements(self.csv_file_path, self.user_file_id)
+        file_id = general_data_elements.file_id or str(self.user_file_id)
         self.logger.info(f"General Data Elements: {general_data_elements.model_dump()}")
 
         sc_model = create_standard_charge_model(self.csv_file_path)
@@ -107,7 +110,7 @@ class Csv2Parquet:
                         raw_standard_charge = sc_model(**row)
                         ## standard_charge = sc_model.model_validate(row)
                         self.meta_data.input_row_count += 1
-                        sc_pp_pair_list = self.split_raw_standard_charge(raw_standard_charge, self.csv_type, general_data_elements.file_id)
+                        sc_pp_pair_list = self.split_raw_standard_charge(raw_standard_charge, self.csv_type, file_id)
                         for standard_charge, payer_plan in sc_pp_pair_list:
                             standard_charges.append(standard_charge)
                             self.meta_data.standard_charge_count += 1

@@ -1,5 +1,5 @@
 import uuid
-from typing import Tuple
+from typing import Optional, Tuple
 
 from pydantic import BaseModel, Field, field_validator, model_validator
 
@@ -67,7 +67,7 @@ StateAbbreviations = {
 UUID_NAMESPACE = uuid.uuid5(uuid.NAMESPACE_URL, 'https://github.com/kennytro/hpt_converter')
 
 class GeneralDataElements(BaseModel):
-    file_id: str = Field(default=None, description="The file identifier for the hospital price transparency file.")
+    file_id: Optional[str] = Field(default=None, description="The file identifier for the hospital price transparency file.")
     hospital_name: str = Field(..., description="The legal business name of the licensee.")
     last_updated_on: str = Field(..., description="Date on which the MRF was last updated. Date must be in an ISO 8601 format (i.e. YYYY-MM-DD).")
     version: str = Field(..., description="The version of the CMS Template used.")
@@ -75,8 +75,8 @@ class GeneralDataElements(BaseModel):
     hospital_address: str = Field(..., description="The geographic address of the corresponding hospital location.")
     license_number: Tuple[str, str] = Field(description="The hospital license number and the licensing state or territory’s two-letter abbreviation for the hospital location(s) indicated in the file.")
     affirmation_statement: bool = Field(..., description="Required affirmation statement.")
-    financial_aid_policy: str = Field(default=None, description="The hospital’s financial aid policy.")
-    general_contract_provisions: str = Field(default=None, description="Payer contract provisions that are negotiated at an aggregate level across items and services (e.g., claim level).")
+    financial_aid_policy: Optional[str] = Field(default=None, description="The hospital’s financial aid policy.")
+    general_contract_provisions: Optional[str] = Field(default=None, description="Payer contract provisions that are negotiated at an aggregate level across items and services (e.g., claim level).")
 
     @field_validator('license_number')
     @classmethod
